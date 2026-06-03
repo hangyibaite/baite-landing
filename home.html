@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Content-to-Cashflow™ Course</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #08080a;
+      --bg-elevated: #111114;
+      --text: #f0ece4;
+      --text-dim: #8a8680;
+      --orange: #FF6B2C;
+      --orange-glow: #FF6B2C88;
+      --purple: #8B5CF6;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 0 60px;
+      background: var(--bg);
+    }
+
+    /* clips orbs/canvas without clipping VSL overlap */
+    #hero-clip {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+      will-change: transform;
+    }
+
+    #orb-orange {
+      width: 360px;
+      height: 360px;
+      background: #FF6B2C;
+      filter: blur(120px);
+      opacity: 0.19;
+      top: 50%;
+      left: 50%;
+      margin-top: -180px;
+      margin-left: -180px;
+    }
+
+    #orb-purple {
+      width: 420px;
+      height: 420px;
+      background: #8B5CF6;
+      filter: blur(120px);
+      opacity: 0.19;
+      top: 50%;
+      left: 50%;
+      margin-top: -210px;
+      margin-left: -210px;
+    }
+
+    /* vignette */
+    #hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: radial-gradient(ellipse at center, transparent 40%, #08080a 100%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      text-align: center;
+      padding: 0 24px;
+      max-width: 860px;
+      width: 100%;
+    }
+
+    /* entrance animation base state */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.7s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .wordmark {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 28px;
+      animation-delay: 0.2s;
+    }
+
+    .hero-headline {
+      font-size: clamp(2.8rem, 5vw, 4.0rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 0.95;
+      margin-bottom: 0;
+      animation-delay: 0.4s;
+      max-width: 70vw;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @media (max-width: 768px) {
+      .hero-headline { font-size: clamp(2.4rem, 7vw, 3.2rem); max-width: 90vw; }
+    }
+
+    .headline-orange {
+      background: linear-gradient(135deg, #FF6B2C 0%, #FF8A50 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .headline-white {
+      color: var(--text);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 60px;
+      padding: 18px 48px; /* identical to .cta-btn */
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      animation-delay: 0.5s;
+      white-space: nowrap;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: stretch; /* force equal height */
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      animation-delay: 0.6s;
+      margin-top: 28px;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      background: var(--orange);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 60px;
+      padding: 18px 48px;
+      cursor: pointer;
+      box-shadow: 0 0 15px #FF6B2C44, 0 0 40px rgba(255, 107, 44, 0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      animation-delay: 0.8s;
+      text-decoration: none;
+    }
+
+    .cta-btn:hover {
+      transform: scale(1.03) translateY(-2px);
+      box-shadow: 0 0 25px #FF6B2C55, 0 0 60px rgba(255, 107, 44, 0.18);
+    }
+
+    /* ── MODAL ── */
+    #modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    #modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-box {
+      background: var(--bg-elevated);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 40px 36px;
+      max-width: 440px;
+      width: 100%;
+      position: relative;
+      transform: translateY(16px);
+      transition: transform 0.25s ease;
+    }
+
+    #modal-overlay.open .modal-box {
+      transform: translateY(0);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 1.4rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px;
+      transition: color 0.15s;
+    }
+
+    .modal-close:hover { color: var(--text); }
+
+    .modal-heading {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .modal-sub {
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      margin-bottom: 28px;
+      line-height: 1.45;
+    }
+
+    .modal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .modal-input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      padding: 14px 16px;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      width: 100%;
+    }
+
+    .modal-input::placeholder { color: var(--text-dim); }
+
+    .modal-input:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(255, 107, 44, 0.15);
+    }
+
+    .modal-submit {
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    /* vsl-wrapper lives inside #hero now — margin-top IS the gap, always exact */
+    .vsl-wrapper {
+      width: 46vw;
+      will-change: width;
+      position: relative;
+      z-index: 4;
+      margin-top: 40px; /* desktop gap */
+      flex-shrink: 0;
+    }
+
+    /* ── VSL (section kept for scroll JS reference) ── */
+    #vsl { display: contents; }
+
+    .vsl-aspect {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      background: rgba(255,255,255,0.92);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 80px rgba(0,0,0,0.5);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .vsl-wrapper { width: 88vw !important; margin-top: 32px; }
+    }
+
+    @media (max-width: 525px) {
+      .vsl-wrapper { margin-top: 20px; }
+      .badge, .cta-btn { padding: 11px 20px; font-size: 0.82rem; }
+      .hero-actions { gap: 8px; }
+      .modal-box { padding: 32px 24px; }
+      .hero-headline { line-height: 1.0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px 28px;">
+    <span style="font-size:0.9rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#f0ece4;">Content-to-Cashflow™ Academy</span>
+    <button class="cta-btn" id="open-modal-nav" style="padding:12px 28px;font-size:0.875rem;animation:none;opacity:1;">Apply Now</button>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section id="hero">
+    <div id="hero-clip">
+      <canvas id="hero-canvas"></canvas>
+      <div class="orb" id="orb-orange"></div>
+      <div class="orb" id="orb-purple"></div>
+    </div>
+
+    <div class="hero-content">
+      <p class="wordmark fade-up">For creators wanting to start earning or scale your business</p>
+
+      <h1 class="hero-headline fade-up">
+        <span class="headline-orange">Content-to-Cashflow™ Academy</span><br />
+        <span class="headline-white">is the fastest way to 2x your revenue (and it's free)</span>
+      </h1>
+
+      <div class="hero-actions fade-up">
+        <div class="badge" style="animation:none;opacity:1;">🚀 First 3 Weeks FREE</div>
+        <button class="cta-btn" id="open-modal" style="animation:none;opacity:1;animation-delay:0.8s;">Apply Now</button>
+      </div>
+    </div>
+
+    <!-- VSL wrapper inside hero so margin-top is the exact gap -->
+    <div class="vsl-wrapper" id="vsl-wrapper">
+      <div class="vsl-aspect"></div>
+    </div>
+  </section>
+
+  <section id="vsl"></section>
+
+  <!-- ── MODAL ── -->
+  <div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-box">
+      <button class="modal-close" id="close-modal" aria-label="Close">×</button>
+      <h2 class="modal-heading" id="modal-title">Get in before the waitlist closes.</h2>
+      <p class="modal-sub">Drop your details — we'll send you instant access.</p>
+      <form class="modal-form" id="signup-form" novalidate>
+        <input class="modal-input" type="text" id="modal-name" name="name" placeholder="Your name" required />
+        <input class="modal-input" type="email" id="modal-email" name="email" placeholder="Your email" required />
+        <button type="submit" class="cta-btn modal-submit">Apply Now</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    /* ── CANVAS GRID + DISTORTION ── */
+    (function () {
+      const canvas = document.getElementById('hero-canvas');
+      const hero   = document.getElementById('hero');
+      const ctx    = canvas.getContext('2d');
+      const GRID   = 60;
+      const RADIUS = 180;
+      const STRENGTH = 22;
+
+      let W, H;
+      let rawMX = 0, rawMY = 0;
+      let smMX  = 0, smMY  = 0; // smoothed cursor for distortion
+
+      function resize() {
+        W = canvas.width  = hero.offsetWidth;
+        H = canvas.height = hero.offsetHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      hero.addEventListener('mousemove', e => {
+        const r = hero.getBoundingClientRect();
+        rawMX = e.clientX - r.left;
+        rawMY = e.clientY - r.top;
+      });
+
+      function drawGrid() {
+        ctx.clearRect(0, 0, W, H);
+        ctx.strokeStyle = 'rgba(255,255,255,0.150)';
+        ctx.lineWidth   = 1;
+
+        const cols = Math.ceil(W / GRID) + 2;
+        const rows = Math.ceil(H / GRID) + 2;
+
+        ctx.beginPath();
+        for (let c = 0; c <= cols; c++) {
+          // build vertical line point by point
+          const pts = [];
+          for (let r = 0; r <= rows; r++) {
+            let gx = c * GRID;
+            let gy = r * GRID;
+            const dx = gx - smMX;
+            const dy = gy - smMY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < RADIUS && dist > 0) {
+              const push = (1 - dist / RADIUS) * STRENGTH;
+              gx += (dx / dist) * push;
+              gy += (dy / dist) * push;
+            }
+            pts.push([gx, gy]);
+          }
+          ctx.moveTo(pts[0][0], pts[0][1]);
+          for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+        }
+
+        for (let r = 0; r <= rows; r++) {
+          const pts = [];
+          for (let c = 0; c <= cols; c++) {
+            let gx = c * GRID;
+            let gy = r * GRID;
+            const dx = gx - smMX;
+            const dy = gy - smMY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < RADIUS && dist > 0) {
+              const push = (1 - dist / RADIUS) * STRENGTH;
+              gx += (dx / dist) * push;
+              gy += (dy / dist) * push;
+            }
+            pts.push([gx, gy]);
+          }
+          ctx.moveTo(pts[0][0], pts[0][1]);
+          for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+        }
+        ctx.stroke();
+      }
+
+      function tick() {
+        smMX += (rawMX - smMX) * 0.08;
+        smMY += (rawMY - smMY) * 0.08;
+        drawGrid();
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    })();
+
+    /* ── AMBIENT ORBS ── */
+    (function () {
+      const hero   = document.getElementById('hero');
+      const orange = document.getElementById('orb-orange');
+      const purple = document.getElementById('orb-purple');
+
+      let rawX = 0, rawY = 0;
+      let oX = 0, oY = 0; // orange
+      let pX = 0, pY = 0; // purple
+
+      hero.addEventListener('mousemove', e => {
+        const r = hero.getBoundingClientRect();
+        rawX = e.clientX - r.left;
+        rawY = e.clientY - r.top;
+      });
+
+      function tick() {
+        oX += (rawX - oX) * 0.12;
+        oY += (rawY - oY) * 0.12;
+        pX += (rawX - pX) * 0.06;
+        pY += (rawY - pY) * 0.06;
+
+        // offset from center of orb (orb is centered at hero center initially)
+        const heroW = hero.offsetWidth;
+        const heroH = hero.offsetHeight;
+        const odx = oX - heroW / 2;
+        const ody = oY - heroH / 2;
+        const pdx = pX - heroW / 2;
+        const pdy = pY - heroH / 2;
+
+        orange.style.transform = `translate(${odx}px, ${ody}px)`;
+        purple.style.transform = `translate(${pdx}px, ${pdy}px)`;
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    })();
+
+    /* ── VSL SCROLL RESIZE + GRID FADE ── */
+    (function () {
+      const wrapper = document.getElementById('vsl-wrapper');
+      const canvas  = document.getElementById('hero-canvas');
+      let ticking = false;
+
+      function updateVSL() {
+        const rect    = wrapper.getBoundingClientRect();
+        const vCenter = rect.top + rect.height / 2;
+        const vpCenter = window.innerHeight / 2;
+        const dist    = Math.abs(vCenter - vpCenter);
+        const maxDist = window.innerHeight * 0.6;
+        const t = Math.max(0, 1 - dist / maxDist);
+        wrapper.style.width = (46 + t * 29) + 'vw'; /* 46vw → 75vw */
+
+        // grid stays fully visible through first half of VSL, then fades to 0 by VSL midpoint
+        const vslTop = rect.top; // top of VSL in viewport
+        const vslMid = rect.top + rect.height * 0.5;
+        if (vslTop > window.innerHeight) {
+          canvas.style.opacity = '1'; // VSL not in view
+        } else {
+          // fade from 1→0 as viewport scrolls from vslTop to vslMid
+          const fadeT = Math.max(0, Math.min(1, (window.innerHeight * 0.5 - vslTop) / (rect.height * 0.5)));
+          canvas.style.opacity = Math.max(0, 1 - fadeT);
+        }
+
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) { requestAnimationFrame(updateVSL); ticking = true; }
+      }, { passive: true });
+
+      updateVSL();
+    })();
+
+    /* ── MODAL ── */
+    const overlay    = document.getElementById('modal-overlay');
+    const openBtn    = document.getElementById('open-modal');
+    const closeBtn   = document.getElementById('close-modal');
+    const form       = document.getElementById('signup-form');
+
+    function openModal()  { overlay.classList.add('open'); }
+    function closeModal() { overlay.classList.remove('open'); }
+    window.openModal = openModal;
+
+    openBtn.addEventListener('click', openModal);
+    document.getElementById('open-modal-nav').addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const name  = document.getElementById('modal-name').value.trim();
+      const email = document.getElementById('modal-email').value.trim();
+      console.log('Signup:', { name, email });
+      alert(`You're in, ${name || 'friend'}! We'll be in touch at ${email}.`);
+      form.reset();
+      closeModal();
+    });
+  </script>
+</body>
+</html>
