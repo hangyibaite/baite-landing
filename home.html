@@ -1,585 +1,1241 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Content-to-Cashflow™ Course</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Content-to-Cashflow™ Course</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    :root {
-      --bg: #08080a;
-      --bg-elevated: #111114;
-      --text: #f0ece4;
-      --text-dim: #8a8680;
-      --orange: #FF6B2C;
-      --orange-glow: #FF6B2C88;
-      --purple: #8B5CF6;
-    }
+        :root {
+            --bg: #08080a;
+            --bg-elevated: #111114;
+            --text: #f0ece4;
+            --text-dim: #8a8680;
+            --orange: #FF6B2C;
+            --orange-glow: #FF6B2C88;
+            --purple: #8B5CF6;
+        }
 
-    html { scroll-behavior: smooth; }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      overflow-x: hidden;
-    }
+        body {
+            font-family: 'Geist', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
 
-    /* ── HERO ── */
-    #hero {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 80px 0 60px;
-      background: var(--bg);
-    }
+        /* ── HERO ── */
+        #hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 0 60px;
+            background: var(--bg);
+        }
 
-    /* clips orbs/canvas without clipping VSL overlap */
-    #hero-clip {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      pointer-events: none;
-      z-index: 0;
-    }
+        /* clips orbs/canvas without clipping VSL overlap */
+        #hero-clip {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
 
-    #hero-canvas {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
+        #hero-canvas {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
 
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 1;
-      will-change: transform;
-    }
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            will-change: transform;
+        }
 
-    #orb-orange {
-      width: 360px;
-      height: 360px;
-      background: #FF6B2C;
-      filter: blur(120px);
-      opacity: 0.19;
-      top: 50%;
-      left: 50%;
-      margin-top: -180px;
-      margin-left: -180px;
-    }
+        #orb-orange {
+            width: 360px;
+            height: 360px;
+            background: #FF6B2C;
+            filter: blur(120px);
+            opacity: 0.19;
+            top: 50%;
+            left: 50%;
+            margin-top: -180px;
+            margin-left: -180px;
+        }
 
-    #orb-purple {
-      width: 420px;
-      height: 420px;
-      background: #8B5CF6;
-      filter: blur(120px);
-      opacity: 0.19;
-      top: 50%;
-      left: 50%;
-      margin-top: -210px;
-      margin-left: -210px;
-    }
+        #orb-purple {
+            width: 420px;
+            height: 420px;
+            background: #8B5CF6;
+            filter: blur(120px);
+            opacity: 0.19;
+            top: 50%;
+            left: 50%;
+            margin-top: -210px;
+            margin-left: -210px;
+        }
 
-    /* vignette */
-    #hero::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: 2;
-      background: radial-gradient(ellipse at center, transparent 40%, #08080a 100%);
-      pointer-events: none;
-    }
+        /* vignette */
+        #hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            background: radial-gradient(ellipse at center, transparent 40%, #08080a 100%);
+            pointer-events: none;
+        }
 
-    .hero-content {
-      position: relative;
-      z-index: 3;
-      text-align: center;
-      padding: 0 24px;
-      max-width: 860px;
-      width: 100%;
-    }
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            padding: 0 24px;
+            max-width: 860px;
+            width: 100%;
+        }
 
-    /* entrance animation base state */
-    .fade-up {
-      opacity: 0;
-      transform: translateY(24px);
-      animation: fadeUp 0.7s ease forwards;
-    }
+        /* entrance animation base state */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(24px);
+            animation: fadeUp 0.7s ease forwards;
+        }
 
-    @keyframes fadeUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    .wordmark {
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      margin-bottom: 28px;
-      animation-delay: 0.2s;
-    }
+        .wordmark {
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 28px;
+            animation-delay: 0.2s;
+        }
 
-    .hero-headline {
-      font-size: clamp(2.8rem, 5vw, 4.0rem);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 0.95;
-      margin-bottom: 0;
-      animation-delay: 0.4s;
-      max-width: 70vw;
-      margin-left: auto;
-      margin-right: auto;
-    }
+        .hero-headline {
+            font-size: clamp(2.8rem, 5vw, 4.0rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 0.95;
+            margin-bottom: 0;
+            animation-delay: 0.4s;
+            max-width: 70vw;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-    @media (max-width: 768px) {
-      .hero-headline { font-size: clamp(2.4rem, 7vw, 3.2rem); max-width: 90vw; }
-    }
+        @media (max-width: 768px) {
+            .hero-headline {
+                font-size: clamp(2.4rem, 7vw, 3.2rem);
+                max-width: 90vw;
+            }
+        }
 
-    .headline-orange {
-      background: linear-gradient(135deg, #FF6B2C 0%, #FF8A50 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+        .headline-orange {
+            background: linear-gradient(135deg, #FF6B2C 0%, #FF8A50 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-    .headline-white {
-      color: var(--text);
-    }
+        .headline-white {
+            color: var(--text);
+        }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      background: rgba(139, 92, 246, 0.15);
-      border: 1px solid rgba(139, 92, 246, 0.3);
-      border-radius: 60px;
-      padding: 18px 48px; /* identical to .cta-btn */
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text);
-      animation-delay: 0.5s;
-      white-space: nowrap;
-    }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 60px;
+            padding: 18px 48px;
+            /* identical to .cta-btn */
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
+            animation-delay: 0.5s;
+            white-space: nowrap;
+        }
 
-    .hero-actions {
-      display: flex;
-      align-items: stretch; /* force equal height */
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      animation-delay: 0.6s;
-      margin-top: 28px;
-    }
+        .hero-actions {
+            display: flex;
+            align-items: stretch;
+            /* force equal height */
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            animation-delay: 0.6s;
+            margin-top: 28px;
+        }
 
-    .cta-btn {
-      display: inline-block;
-      background: var(--orange);
-      color: #fff;
-      font-family: 'Inter', sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      border: none;
-      border-radius: 60px;
-      padding: 18px 48px;
-      cursor: pointer;
-      box-shadow: 0 0 15px #FF6B2C44, 0 0 40px rgba(255, 107, 44, 0.1);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      animation-delay: 0.8s;
-      text-decoration: none;
-    }
+        .cta-btn {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            background: linear-gradient(160deg, #ff8c4a 0%, #FF6B2C 55%, #e85a1a 100%);
+            border: 1px solid rgba(255,180,120,0.5);
+            box-shadow: 0 4px 32px rgba(0,0,0,0.35), 0 1px 0 rgba(255,220,180,0.35) inset, 0 -1px 0 rgba(160,40,0,0.3) inset, 0 0 28px rgba(255,107,44,0.35);
+            border-radius: 60px;
+            padding: 18px 48px;
+            font-family: 'Geist', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #ffffff;
+            cursor: pointer;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+            animation-delay: 0.8s;
+            text-decoration: none;
+        }
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 40%;
+            border-radius: 60px 60px 0 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 100%);
+            pointer-events: none;
+        }
+        .cta-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.18), transparent 55%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .cta-btn:hover {
+            border-color: rgba(255,200,150,0.6);
+            box-shadow: 0 8px 48px rgba(0,0,0,0.45), 0 1px 0 rgba(255,220,180,0.4) inset, 0 0 40px rgba(255,107,44,0.45);
+            transform: scale(1.03) translateY(-2px);
+        }
+        .cta-btn:hover::after { opacity: 1; }
 
-    .cta-btn:hover {
-      transform: scale(1.03) translateY(-2px);
-      box-shadow: 0 0 25px #FF6B2C55, 0 0 60px rgba(255, 107, 44, 0.18);
-    }
+        /* ── MODAL ── */
+        #modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
 
-    /* ── MODAL ── */
-    #modal-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-    }
+        #modal-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
 
-    #modal-overlay.open {
-      opacity: 1;
-      pointer-events: all;
-    }
+        .modal-box {
+            background: var(--bg-elevated);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 40px 36px;
+            max-width: 440px;
+            width: 100%;
+            position: relative;
+            transform: translateY(16px);
+            transition: transform 0.25s ease;
+        }
 
-    .modal-box {
-      background: var(--bg-elevated);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
-      padding: 40px 36px;
-      max-width: 440px;
-      width: 100%;
-      position: relative;
-      transform: translateY(16px);
-      transition: transform 0.25s ease;
-    }
+        #modal-overlay.open .modal-box {
+            transform: translateY(0);
+        }
 
-    #modal-overlay.open .modal-box {
-      transform: translateY(0);
-    }
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-size: 1.4rem;
+            cursor: pointer;
+            line-height: 1;
+            padding: 4px;
+            transition: color 0.15s;
+        }
 
-    .modal-close {
-      position: absolute;
-      top: 16px;
-      right: 20px;
-      background: none;
-      border: none;
-      color: var(--text-dim);
-      font-size: 1.4rem;
-      cursor: pointer;
-      line-height: 1;
-      padding: 4px;
-      transition: color 0.15s;
-    }
+        .modal-close:hover {
+            color: var(--text);
+        }
 
-    .modal-close:hover { color: var(--text); }
+        .modal-heading {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
 
-    .modal-heading {
-      font-size: 1.6rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      color: var(--text);
-      margin-bottom: 10px;
-    }
+        .modal-sub {
+            font-size: 0.95rem;
+            color: var(--text-dim);
+            margin-bottom: 28px;
+            line-height: 1.45;
+        }
 
-    .modal-sub {
-      font-size: 0.95rem;
-      color: var(--text-dim);
-      margin-bottom: 28px;
-      line-height: 1.45;
-    }
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
 
-    .modal-form {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
+        .modal-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text);
+            font-family: 'Geist', sans-serif;
+            font-size: 0.95rem;
+            padding: 14px 16px;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            width: 100%;
+        }
 
-    .modal-input {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      font-size: 0.95rem;
-      padding: 14px 16px;
-      outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-      width: 100%;
-    }
+        .modal-input::placeholder {
+            color: var(--text-dim);
+        }
 
-    .modal-input::placeholder { color: var(--text-dim); }
+        .modal-input:focus {
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px rgba(255, 107, 44, 0.15);
+        }
 
-    .modal-input:focus {
-      border-color: var(--orange);
-      box-shadow: 0 0 0 3px rgba(255, 107, 44, 0.15);
-    }
+        .modal-submit {
+            width: 100%;
+            margin-top: 4px;
+        }
 
-    .modal-submit {
-      width: 100%;
-      margin-top: 4px;
-    }
+        /* vsl-wrapper lives inside #hero now — margin-top IS the gap, always exact */
+        .vsl-wrapper {
+            width: 46vw;
+            will-change: width;
+            position: relative;
+            z-index: 4;
+            margin-top: 40px;
+            /* desktop gap */
+            flex-shrink: 0;
+        }
 
-    /* vsl-wrapper lives inside #hero now — margin-top IS the gap, always exact */
-    .vsl-wrapper {
-      width: 46vw;
-      will-change: width;
-      position: relative;
-      z-index: 4;
-      margin-top: 40px; /* desktop gap */
-      flex-shrink: 0;
-    }
+        /* ── VSL (section kept for scroll JS reference) ── */
+        #vsl {
+            display: contents;
+        }
 
-    /* ── VSL (section kept for scroll JS reference) ── */
-    #vsl { display: contents; }
+        .vsl-aspect {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 0 80px rgba(0, 0, 0, 0.5);
+        }
 
-    .vsl-aspect {
-      position: relative;
-      width: 100%;
-      padding-top: 56.25%;
-      background: rgba(255,255,255,0.92);
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 0 80px rgba(0,0,0,0.5);
-    }
+        /* ── PAIN ── */
+        #pain {
+            padding: 48px 28px 100vh;
+            display: flex;
+            justify-content: flex-start;
+            background: #000000;
+        }
 
-    /* ── RESPONSIVE ── */
-    @media (max-width: 768px) {
-      .vsl-wrapper { width: 88vw !important; margin-top: 32px; }
-    }
+        .pain-inner {
+            max-width: 90vw;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+            /* 150% of original 24px */
+            text-align: left;
+            align-items: flex-start;
+        }
 
-    @media (max-width: 525px) {
-      .vsl-wrapper { margin-top: 20px; }
-      .badge, .cta-btn { padding: 11px 20px; font-size: 0.82rem; }
-      .hero-actions { gap: 8px; }
-      .modal-box { padding: 32px 24px; }
-      .hero-headline { line-height: 1.0; }
-    }
-  </style>
+        /* buttons left-aligned in pain section, tight gap above */
+        .pain-inner .hero-actions {
+            justify-content: flex-start;
+            margin-top: 0;
+        }
+
+        .pain-lead {
+            font-size: clamp(3rem, 4.8vw, 3.5rem);
+            font-weight: 600;
+            color: #ffffff;
+            line-height: 1.0;
+            letter-spacing: -0.025em;
+            max-width: 90vw;
+        }
+
+        @media (max-width: 768px) {
+            .pain-lead {
+                font-size: clamp(2rem, 5.5vw, 2.6rem);
+            }
+
+            .pain-body {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 525px) {
+            .pain-lead {
+                font-size: clamp(1.5rem, 7vw, 2rem);
+            }
+
+            .pain-body {
+                font-size: 0.875rem;
+            }
+        }
+
+        .pain-body {
+            font-size: clamp(1rem, 1.5vw, 1.1rem);
+            font-weight: 400;
+            color: #ffffff;
+            line-height: 1.5;
+            max-width: 750px;
+        }
+
+        .pain-small-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 620px;
+        }
+
+        .pain-small-group .pain-body {
+            max-width: none;
+        }
+
+
+        .pain-em {
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        /* ── FOOTER ── */
+
+        /* ── MARQUEE CAROUSEL ── */
+        .marquee-section {
+            overflow: hidden;
+            background: var(--bg);
+            padding: 28px 0;
+            border-top: 2.5px solid rgba(255,255,255,0.15);
+            border-bottom: 2.5px solid rgba(255,255,255,0.15);
+            margin-bottom: 64px;
+        }
+        .marquee-track {
+            display: flex;
+            width: max-content;
+            animation: marquee-scroll 90s linear infinite;
+        }
+        .marquee-section:hover .marquee-track {
+            animation-play-state: paused;
+        }
+        @keyframes marquee-scroll {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+        .marquee-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 0 20px;
+            white-space: nowrap;
+            font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+            font-weight: 600;
+            color: var(--text);
+            letter-spacing: 0.01em;
+        }
+        .marquee-sep {
+            color: var(--orange);
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        /* ── WHAT'S INSIDE ── */
+        #whats-inside {
+            padding: 100px 28px 120px;
+            background: var(--bg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #wi-clip {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0;
+            transition: none;
+        }
+
+        #wi-canvas {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        #wi-orb-orange {
+            width: 360px;
+            height: 360px;
+            background: #FF6B2C;
+            filter: blur(120px);
+            opacity: 0.19;
+            position: absolute;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            margin-top: -180px;
+            margin-left: -180px;
+            will-change: transform;
+        }
+
+        #wi-orb-purple {
+            width: 420px;
+            height: 420px;
+            background: #8B5CF6;
+            filter: blur(120px);
+            opacity: 0.19;
+            position: absolute;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            margin-top: -210px;
+            margin-left: -210px;
+            will-change: transform;
+        }
+
+        /* vignette for section 4 */
+        #whats-inside::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background: radial-gradient(ellipse at center, transparent 40%, #08080a 100%);
+            pointer-events: none;
+        }
+
+        .wi-inner {
+            position: relative;
+            z-index: 2;
+        }
+
+        .wi-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .wi-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .wi-title {
+            font-size: clamp(3rem, 4.8vw, 3.5rem);
+            font-weight: 600;
+            color: #ffffff;
+            line-height: 1.0;
+            letter-spacing: -0.025em;
+            max-width: 60vw;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .wi-title {
+                max-width: 90vw;
+            }
+        }
+
+        .wi-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 640px) {
+            .wi-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tilt-wrap {
+            perspective: 1000px;
+            display: flex;
+        }
+
+        .tilt-wrap .glass-card {
+            width: 100%;
+        }
+
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255, 107, 44, 0.09) 0%, rgba(255, 255, 255, 0.07) 50%, rgba(255, 107, 44, 0.05) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 32px rgba(0, 0, 0, 0.35), 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 -1px 0 rgba(255, 107, 44, 0.08) inset;
+            transform-style: preserve-3d;
+            will-change: transform;
+            border-radius: 20px;
+            padding: 14px 20px;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+        }
+
+        .glass-card:hover {
+            background: linear-gradient(135deg, rgba(255, 107, 44, 0.09) 0%, rgba(255, 255, 255, 0.06) 60%, rgba(255, 107, 44, 0.05) 100%);
+            border-color: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.45), 0 1px 0 rgba(255, 255, 255, 0.08) inset;
+        }
+
+        .glass-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.11), transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .glass-card:hover::after {
+            opacity: 1;
+        }
+
+        .card-num {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--orange);
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+
+        .card-title {
+            font-size: clamp(1.5rem, 2.2vw, 2.5rem);
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        @media (max-width: 768px) {
+            .card-title {
+                font-size: clamp(1.3rem, 4vw, 1.8rem);
+            }
+        }
+
+        @media (max-width: 525px) {
+            .card-title {
+                font-size: clamp(1.1rem, 5vw, 1.4rem);
+            }
+        }
+
+        .card-tag {
+            font-weight: 400;
+            color: var(--text-dim);
+        }
+
+        .card-desc {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            #whats-inside { padding: 72px 28px 80px; }
+            .marquee-section { margin-bottom: 48px; }
+        }
+        @media (max-width: 525px) {
+            #whats-inside { padding: 56px 20px 56px; }
+            .marquee-section { margin-bottom: 36px; }
+        }
+
+        .wi-cta-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            margin-top: 60px;
+        }
+        /* orange glass CTA */
+
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .vsl-wrapper {
+                width: 88vw !important;
+                margin-top: 32px;
+            }
+        }
+
+        @media (max-width: 525px) {
+            .vsl-wrapper {
+                margin-top: 20px;
+            }
+
+            .badge,
+            .cta-btn {
+                padding: 11px 20px;
+                font-size: 0.82rem;
+            }
+
+            .hero-actions {
+                gap: 8px;
+            }
+
+            .modal-box {
+                padding: 32px 24px;
+            }
+
+            .hero-headline {
+                line-height: 1.0;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-  <!-- ── NAV ── -->
-  <nav style="position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px 28px;">
-    <span style="font-size:0.9rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#f0ece4;">Content-to-Cashflow™ Academy</span>
-    <button class="cta-btn" id="open-modal-nav" style="padding:12px 28px;font-size:0.875rem;animation:none;opacity:1;">Apply Now</button>
-  </nav>
+    <!-- ── NAV ── -->
+    <nav
+        style="position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px 28px;">
+        <span
+            style="font-size:0.9rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#f0ece4;">Content-to-Cashflow™
+            Academy</span>
+        <button class="cta-btn" id="open-modal-nav"
+            style="padding:12px 28px;font-size:0.875rem;animation:none;opacity:1;">Apply Now</button>
+    </nav>
 
-  <!-- ── HERO ── -->
-  <section id="hero">
-    <div id="hero-clip">
-      <canvas id="hero-canvas"></canvas>
-      <div class="orb" id="orb-orange"></div>
-      <div class="orb" id="orb-purple"></div>
+    <!-- ── HERO ── -->
+    <section id="hero">
+        <div id="hero-clip">
+            <canvas id="hero-canvas"></canvas>
+            <div class="orb" id="orb-orange"></div>
+            <div class="orb" id="orb-purple"></div>
+        </div>
+
+        <div class="hero-content">
+            <p class="wordmark fade-up">For creators wanting to start earning or scale your business</p>
+
+            <h1 class="hero-headline fade-up">
+                <span class="headline-orange">Content-to-Cashflow™ Academy</span><br />
+                <span class="headline-white">is the fastest way to 2x your revenue (and it's free)</span>
+            </h1>
+
+            <div class="hero-actions fade-up">
+                <div class="badge" style="animation:none;opacity:1;">🚀 First 3 Weeks FREE</div>
+                <button class="cta-btn" id="open-modal" style="animation:none;opacity:1;animation-delay:0.8s;">Apply
+                    Now</button>
+            </div>
+        </div>
+
+        <!-- VSL wrapper inside hero so margin-top is the exact gap -->
+        <div class="vsl-wrapper" id="vsl-wrapper">
+            <div class="vsl-aspect"></div>
+        </div>
+    </section>
+
+    <section id="vsl"></section>
+
+    <!-- ── SECTION 3: WHAT'S INSIDE ── -->
+    <section id="whats-inside">
+        <div id="wi-clip">
+            <canvas id="wi-canvas"></canvas>
+            <div id="wi-orb-orange"></div>
+            <div id="wi-orb-purple"></div>
+        </div>
+        <div class="wi-inner">
+            <div class="wi-header">
+                <h2 class="wi-title">Six modules. Every single thing you need to turn your content into a system that
+                    prints clients.</h2>
+            </div>
+
+            <div class="wi-grid">
+                <div class="tilt-wrap">
+                    <div class="glass-card">
+                        <h3 class="card-title">The Offer Engineer</h3>
+                        <p class="card-desc">An offer people line up to pay for, then we build the ascension ladder to
+                            scale LTV above it.</p>
+                    </div>
+                </div>
+                <div class="tilt-wrap">
+                    <div class="glass-card">
+                        <h3 class="card-title">The Inbound Engine</h3>
+                        <p class="card-desc">Lead magnets, landing pages, VSLs, full funnels, nurture sequences. The
+                            whole machine that pulls attention and turns it into booked calls.</p>
+                    </div>
+                </div>
+                <div class="tilt-wrap">
+                    <div class="glass-card">
+                        <h3 class="card-title">The Bot Army</h3>
+                        <p class="card-desc">Manychat flows, automated DMs, and the army of little robots that run your
+                            front-end while you sleep.</p>
+                    </div>
+                </div>
+                <div class="tilt-wrap">
+                    <div class="glass-card">
+                        <h3 class="card-title">The Detective Trackers</h3>
+                        <p class="card-desc">GA4, Meta Pixel, and the full tracking stack so you know exactly where
+                            every dollar is coming from and what to double down on.</p>
+                    </div>
+                </div>
+                <div class="tilt-wrap">
+                    <div class="glass-card">
+                        <h3 class="card-title">The AI Machine</h3>
+                        <p class="card-desc">How to wire AI into every part of your business so the whole
+                            thing builds, runs, and scales itself. Most of this stack doesn't exist anywhere else yet.
+                        </p>
+                    </div>
+                </div>
+                <div class="tilt-wrap">
+                    <div class="glass-card">
+                        <h3 class="card-title">The Closing Room</h3>
+                        <p class="card-desc">Your booking flow and call structure to convert clients in cashflow and
+                            keep them coming back without being weird about
+                            it.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="wi-cta-wrap">
+                <button class="cta-btn" onclick="openModal()">Apply Now</button>
+            </div>
+        </div><!-- /.wi-inner -->
+    </section>
+
+    <!-- ── MARQUEE CAROUSEL ── -->
+    <div class="marquee-section">
+        <div class="marquee-track">
+            <!-- two copies for seamless loop -->
+            <template id="marquee-tpl">
+                <span class="marquee-item">Offer Engineering<span class="marquee-sep">+</span></span>
+                <span class="marquee-item">Funnel Building<span class="marquee-sep">+</span></span>
+                <span class="marquee-item">Nurture Sequences<span class="marquee-sep">+</span></span>
+                <span class="marquee-item">Community Setup<span class="marquee-sep">+</span></span>
+                <span class="marquee-item">Automation Flows<span class="marquee-sep">+</span></span>
+                <span class="marquee-item">Full Tracking<span class="marquee-sep">+</span></span>
+                <span class="marquee-item">AI Integration<span class="marquee-sep">+</span></span>
+            </template>
+        </div>
+    </div>
+    <script>
+        (function () {
+            const tpl = document.getElementById('marquee-tpl');
+            const track = tpl.parentElement;
+            const clone = tpl.content.cloneNode(true);
+            const clone2 = tpl.content.cloneNode(true);
+            track.removeChild(tpl);
+            track.appendChild(clone);
+            track.appendChild(clone2);
+        })();
+    </script>
+
+    <!-- ── SECTION 4: PAIN ── -->
+    <section id="pain">
+        <div class="pain-inner">
+            <p class="pain-lead">"Bro this changed my life", "Keep on making vids" they say, but has it changed your
+                revenue? Clearly something can improve, you already know that.</p>
+            <div class="pain-small-group">
+                <p class="pain-body">And honestly, after fixing <span class="pain-em">200+ funnels</span>, I can promise
+                    you it's almost never your content. Your system that's (ahem) supposed to catch the attention and
+                    turn it into money is broken.</p>
+                <p class="pain-body">And you're just one click away from fixing that and doubling your revenue without
+                    changing a single post. 👇</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── MODAL ── -->
+    <div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-box">
+            <button class="modal-close" id="close-modal" aria-label="Close">×</button>
+            <h2 class="modal-heading" id="modal-title">Get in before the waitlist closes.</h2>
+            <p class="modal-sub">Drop your details — we'll send you instant access.</p>
+            <form class="modal-form" id="signup-form" novalidate>
+                <input class="modal-input" type="text" id="modal-name" name="name" placeholder="Your name" required />
+                <input class="modal-input" type="email" id="modal-email" name="email" placeholder="Your email"
+                    required />
+                <button type="submit" class="cta-btn modal-submit">Apply Now</button>
+            </form>
+        </div>
     </div>
 
-    <div class="hero-content">
-      <p class="wordmark fade-up">For creators wanting to start earning or scale your business</p>
+    <script>
+        /* ── SHARED: CANVAS GRID + DISTORTION + ORBS ── */
+        function initGridEffect(section, canvas, orbOrange, orbPurple) {
+            const ctx = canvas.getContext('2d');
+            const GRID = 60, RADIUS = 180, STRENGTH = 22;
+            let W, H, rawMX = 0, rawMY = 0, smMX = 0, smMY = 0;
+            let rawX = 0, rawY = 0, oX = 0, oY = 0, pX = 0, pY = 0;
 
-      <h1 class="hero-headline fade-up">
-        <span class="headline-orange">Content-to-Cashflow™ Academy</span><br />
-        <span class="headline-white">is the fastest way to 2x your revenue (and it's free)</span>
-      </h1>
-
-      <div class="hero-actions fade-up">
-        <div class="badge" style="animation:none;opacity:1;">🚀 First 3 Weeks FREE</div>
-        <button class="cta-btn" id="open-modal" style="animation:none;opacity:1;animation-delay:0.8s;">Apply Now</button>
-      </div>
-    </div>
-
-    <!-- VSL wrapper inside hero so margin-top is the exact gap -->
-    <div class="vsl-wrapper" id="vsl-wrapper">
-      <div class="vsl-aspect"></div>
-    </div>
-  </section>
-
-  <section id="vsl"></section>
-
-  <!-- ── MODAL ── -->
-  <div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <div class="modal-box">
-      <button class="modal-close" id="close-modal" aria-label="Close">×</button>
-      <h2 class="modal-heading" id="modal-title">Get in before the waitlist closes.</h2>
-      <p class="modal-sub">Drop your details — we'll send you instant access.</p>
-      <form class="modal-form" id="signup-form" novalidate>
-        <input class="modal-input" type="text" id="modal-name" name="name" placeholder="Your name" required />
-        <input class="modal-input" type="email" id="modal-email" name="email" placeholder="Your email" required />
-        <button type="submit" class="cta-btn modal-submit">Apply Now</button>
-      </form>
-    </div>
-  </div>
-
-  <script>
-    /* ── CANVAS GRID + DISTORTION ── */
-    (function () {
-      const canvas = document.getElementById('hero-canvas');
-      const hero   = document.getElementById('hero');
-      const ctx    = canvas.getContext('2d');
-      const GRID   = 60;
-      const RADIUS = 180;
-      const STRENGTH = 22;
-
-      let W, H;
-      let rawMX = 0, rawMY = 0;
-      let smMX  = 0, smMY  = 0; // smoothed cursor for distortion
-
-      function resize() {
-        W = canvas.width  = hero.offsetWidth;
-        H = canvas.height = hero.offsetHeight;
-      }
-      resize();
-      window.addEventListener('resize', resize);
-
-      hero.addEventListener('mousemove', e => {
-        const r = hero.getBoundingClientRect();
-        rawMX = e.clientX - r.left;
-        rawMY = e.clientY - r.top;
-      });
-
-      function drawGrid() {
-        ctx.clearRect(0, 0, W, H);
-        ctx.strokeStyle = 'rgba(255,255,255,0.150)';
-        ctx.lineWidth   = 1;
-
-        const cols = Math.ceil(W / GRID) + 2;
-        const rows = Math.ceil(H / GRID) + 2;
-
-        ctx.beginPath();
-        for (let c = 0; c <= cols; c++) {
-          // build vertical line point by point
-          const pts = [];
-          for (let r = 0; r <= rows; r++) {
-            let gx = c * GRID;
-            let gy = r * GRID;
-            const dx = gx - smMX;
-            const dy = gy - smMY;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < RADIUS && dist > 0) {
-              const push = (1 - dist / RADIUS) * STRENGTH;
-              gx += (dx / dist) * push;
-              gy += (dy / dist) * push;
+            function resize() {
+                W = canvas.width = section.offsetWidth;
+                H = canvas.height = section.offsetHeight;
             }
-            pts.push([gx, gy]);
-          }
-          ctx.moveTo(pts[0][0], pts[0][1]);
-          for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
-        }
+            resize();
+            window.addEventListener('resize', resize);
 
-        for (let r = 0; r <= rows; r++) {
-          const pts = [];
-          for (let c = 0; c <= cols; c++) {
-            let gx = c * GRID;
-            let gy = r * GRID;
-            const dx = gx - smMX;
-            const dy = gy - smMY;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < RADIUS && dist > 0) {
-              const push = (1 - dist / RADIUS) * STRENGTH;
-              gx += (dx / dist) * push;
-              gy += (dy / dist) * push;
+            section.addEventListener('mousemove', e => {
+                const r = section.getBoundingClientRect();
+                rawMX = rawX = e.clientX - r.left;
+                rawMY = rawY = e.clientY - r.top;
+            });
+
+            function drawGrid() {
+                ctx.clearRect(0, 0, W, H);
+                ctx.strokeStyle = 'rgba(255,255,255,0.150)';
+                ctx.lineWidth = 1;
+                const cols = Math.ceil(W / GRID) + 2;
+                const rows = Math.ceil(H / GRID) + 2;
+                ctx.beginPath();
+                for (let c = 0; c <= cols; c++) {
+                    const pts = [];
+                    for (let r = 0; r <= rows; r++) {
+                        let gx = c * GRID, gy = r * GRID;
+                        const dx = gx - smMX, dy = gy - smMY;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < RADIUS && dist > 0) { const p = (1 - dist / RADIUS) * STRENGTH; gx += dx / dist * p; gy += dy / dist * p; }
+                        pts.push([gx, gy]);
+                    }
+                    ctx.moveTo(pts[0][0], pts[0][1]);
+                    for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+                }
+                for (let r = 0; r <= rows; r++) {
+                    const pts = [];
+                    for (let c = 0; c <= cols; c++) {
+                        let gx = c * GRID, gy = r * GRID;
+                        const dx = gx - smMX, dy = gy - smMY;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < RADIUS && dist > 0) { const p = (1 - dist / RADIUS) * STRENGTH; gx += dx / dist * p; gy += dy / dist * p; }
+                        pts.push([gx, gy]);
+                    }
+                    ctx.moveTo(pts[0][0], pts[0][1]);
+                    for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+                }
+                ctx.stroke();
             }
-            pts.push([gx, gy]);
-          }
-          ctx.moveTo(pts[0][0], pts[0][1]);
-          for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
-        }
-        ctx.stroke();
-      }
 
-      function tick() {
-        smMX += (rawMX - smMX) * 0.08;
-        smMY += (rawMY - smMY) * 0.08;
-        drawGrid();
-        requestAnimationFrame(tick);
-      }
-      requestAnimationFrame(tick);
-    })();
-
-    /* ── AMBIENT ORBS ── */
-    (function () {
-      const hero   = document.getElementById('hero');
-      const orange = document.getElementById('orb-orange');
-      const purple = document.getElementById('orb-purple');
-
-      let rawX = 0, rawY = 0;
-      let oX = 0, oY = 0; // orange
-      let pX = 0, pY = 0; // purple
-
-      hero.addEventListener('mousemove', e => {
-        const r = hero.getBoundingClientRect();
-        rawX = e.clientX - r.left;
-        rawY = e.clientY - r.top;
-      });
-
-      function tick() {
-        oX += (rawX - oX) * 0.12;
-        oY += (rawY - oY) * 0.12;
-        pX += (rawX - pX) * 0.06;
-        pY += (rawY - pY) * 0.06;
-
-        // offset from center of orb (orb is centered at hero center initially)
-        const heroW = hero.offsetWidth;
-        const heroH = hero.offsetHeight;
-        const odx = oX - heroW / 2;
-        const ody = oY - heroH / 2;
-        const pdx = pX - heroW / 2;
-        const pdy = pY - heroH / 2;
-
-        orange.style.transform = `translate(${odx}px, ${ody}px)`;
-        purple.style.transform = `translate(${pdx}px, ${pdy}px)`;
-        requestAnimationFrame(tick);
-      }
-      requestAnimationFrame(tick);
-    })();
-
-    /* ── VSL SCROLL RESIZE + GRID FADE ── */
-    (function () {
-      const wrapper = document.getElementById('vsl-wrapper');
-      const canvas  = document.getElementById('hero-canvas');
-      let ticking = false;
-
-      function updateVSL() {
-        const rect    = wrapper.getBoundingClientRect();
-        const vCenter = rect.top + rect.height / 2;
-        const vpCenter = window.innerHeight / 2;
-        const dist    = Math.abs(vCenter - vpCenter);
-        const maxDist = window.innerHeight * 0.6;
-        const t = Math.max(0, 1 - dist / maxDist);
-        wrapper.style.width = (46 + t * 29) + 'vw'; /* 46vw → 75vw */
-
-        // grid stays fully visible through first half of VSL, then fades to 0 by VSL midpoint
-        const vslTop = rect.top; // top of VSL in viewport
-        const vslMid = rect.top + rect.height * 0.5;
-        if (vslTop > window.innerHeight) {
-          canvas.style.opacity = '1'; // VSL not in view
-        } else {
-          // fade from 1→0 as viewport scrolls from vslTop to vslMid
-          const fadeT = Math.max(0, Math.min(1, (window.innerHeight * 0.5 - vslTop) / (rect.height * 0.5)));
-          canvas.style.opacity = Math.max(0, 1 - fadeT);
+            function tick() {
+                smMX += (rawMX - smMX) * 0.08;
+                smMY += (rawMY - smMY) * 0.08;
+                drawGrid();
+                oX += (rawX - oX) * 0.12; oY += (rawY - oY) * 0.12;
+                pX += (rawX - pX) * 0.06; pY += (rawY - pY) * 0.06;
+                const sw = section.offsetWidth, sh = section.offsetHeight;
+                orbOrange.style.transform = `translate(${oX - sw / 2}px, ${oY - sh / 2}px)`;
+                orbPurple.style.transform = `translate(${pX - sw / 2}px, ${pY - sh / 2}px)`;
+                requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
         }
 
-        ticking = false;
-      }
+        initGridEffect(
+            document.getElementById('hero'),
+            document.getElementById('hero-canvas'),
+            document.getElementById('orb-orange'),
+            document.getElementById('orb-purple')
+        );
+        initGridEffect(
+            document.getElementById('whats-inside'),
+            document.getElementById('wi-canvas'),
+            document.getElementById('wi-orb-orange'),
+            document.getElementById('wi-orb-purple')
+        );
 
-      window.addEventListener('scroll', () => {
-        if (!ticking) { requestAnimationFrame(updateVSL); ticking = true; }
-      }, { passive: true });
+        /* ── VSL SCROLL RESIZE + GRID FADE ── */
+        (function () {
+            const wrapper = document.getElementById('vsl-wrapper');
+            const canvas = document.getElementById('hero-canvas');
+            let ticking = false;
 
-      updateVSL();
-    })();
+            function updateVSL() {
+                const rect = wrapper.getBoundingClientRect();
+                const vCenter = rect.top + rect.height / 2;
+                const vpCenter = window.innerHeight / 2;
+                const dist = Math.abs(vCenter - vpCenter);
+                const maxDist = window.innerHeight * 0.6;
+                const t = Math.max(0, 1 - dist / maxDist);
+                wrapper.style.width = (46 + t * 29) + 'vw'; /* 46vw → 75vw */
 
-    /* ── MODAL ── */
-    const overlay    = document.getElementById('modal-overlay');
-    const openBtn    = document.getElementById('open-modal');
-    const closeBtn   = document.getElementById('close-modal');
-    const form       = document.getElementById('signup-form');
+                // grid stays fully visible while VSL is on screen, then fades to 0 as VSL bottom exits viewport
+                const vslBottom = rect.bottom;
+                if (vslBottom > window.innerHeight * 0.5) {
+                    canvas.style.opacity = '1'; // VSL still mostly on screen
+                } else {
+                    // fade 1→0 as vslBottom travels from viewport centre to viewport top
+                    const fadeT = Math.max(0, Math.min(1, (window.innerHeight * 0.5 - vslBottom) / (window.innerHeight * 0.5)));
+                    canvas.style.opacity = Math.max(0, 1 - fadeT);
+                }
 
-    function openModal()  { overlay.classList.add('open'); }
-    function closeModal() { overlay.classList.remove('open'); }
-    window.openModal = openModal;
+                ticking = false;
+            }
 
-    openBtn.addEventListener('click', openModal);
-    document.getElementById('open-modal-nav').addEventListener('click', openModal);
-    closeBtn.addEventListener('click', closeModal);
-    overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+            window.addEventListener('scroll', () => {
+                if (!ticking) { requestAnimationFrame(updateVSL); ticking = true; }
+            }, { passive: true });
 
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+            updateVSL();
+        })();
 
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      const name  = document.getElementById('modal-name').value.trim();
-      const email = document.getElementById('modal-email').value.trim();
-      console.log('Signup:', { name, email });
-      alert(`You're in, ${name || 'friend'}! We'll be in touch at ${email}.`);
-      form.reset();
-      closeModal();
-    });
-  </script>
+        /* ── SECTION 3 GRID FADE-IN ── */
+        (function () {
+            const wiClip = document.getElementById('wi-clip');
+            const wiSection = document.getElementById('whats-inside');
+            let wiTicking = false;
+            function updateWI() {
+                const rect = wiSection.getBoundingClientRect();
+                const fadeT = Math.max(0, Math.min(1, (window.innerHeight - rect.top) / (window.innerHeight * 0.5)));
+                wiClip.style.opacity = fadeT;
+                wiTicking = false;
+            }
+            window.addEventListener('scroll', () => {
+                if (!wiTicking) { requestAnimationFrame(updateWI); wiTicking = true; }
+            }, { passive: true });
+            updateWI();
+        })();
+
+        /* ── MODAL ── */
+        const overlay = document.getElementById('modal-overlay');
+        const openBtn = document.getElementById('open-modal');
+        const closeBtn = document.getElementById('close-modal');
+        const form = document.getElementById('signup-form');
+
+        function openModal() { overlay.classList.add('open'); }
+        function closeModal() { overlay.classList.remove('open'); }
+        window.openModal = openModal;
+
+        openBtn.addEventListener('click', openModal);
+        document.getElementById('open-modal-nav').addEventListener('click', openModal);
+        closeBtn.addEventListener('click', closeModal);
+        overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+        /* ── CTA GLARE (all buttons) ── */
+        document.querySelectorAll('.cta-btn').forEach(btn => {
+            btn.addEventListener('mousemove', e => {
+                const r = btn.getBoundingClientRect();
+                btn.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+                btn.style.setProperty('--my', (e.clientY - r.top) + 'px');
+            });
+        });
+
+        /* ── TILT CARDS ── */
+        (function () {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            const MAX = 9;
+            const LERP = 0.16;
+
+            document.querySelectorAll('.glass-card').forEach(card => {
+                let curX = 0, curY = 0, tgtX = 0, tgtY = 0, rafId = null;
+
+                function loop() {
+                    curX += (tgtX - curX) * LERP;
+                    curY += (tgtY - curY) * LERP;
+                    card.style.transform = `rotateX(${curX}deg) rotateY(${curY}deg)`;
+                    if (Math.abs(tgtX - curX) > 0.01 || Math.abs(tgtY - curY) > 0.01) {
+                        rafId = requestAnimationFrame(loop);
+                    } else {
+                        card.style.transform = `rotateX(${tgtX}deg) rotateY(${tgtY}deg)`;
+                        rafId = null;
+                    }
+                }
+
+                card.addEventListener('mousemove', e => {
+                    const r = card.getBoundingClientRect();
+                    const x = e.clientX - r.left;
+                    const y = e.clientY - r.top;
+                    tgtY = ((x / r.width) - 0.5) * 2 * MAX;
+                    tgtX = -((y / r.height) - 0.5) * 2 * MAX;
+                    card.style.setProperty('--mx', `${x}px`);
+                    card.style.setProperty('--my', `${y}px`);
+                    if (!rafId) rafId = requestAnimationFrame(loop);
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    tgtX = 0; tgtY = 0;
+                    if (!rafId) rafId = requestAnimationFrame(loop);
+                });
+            });
+        })();
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const name = document.getElementById('modal-name').value.trim();
+            const email = document.getElementById('modal-email').value.trim();
+            console.log('Signup:', { name, email });
+            alert(`You're in, ${name || 'friend'}! We'll be in touch at ${email}.`);
+            form.reset();
+            closeModal();
+        });
+
+        /* ── NAV BUTTON FLY-TO-CENTER ── */
+        (function () {
+            const orig = document.getElementById('open-modal-nav');
+            const EASE = 'cubic-bezier(0.22,1,0.36,1)';
+            const DUR_OUT = '1.1s';
+            const DUR_IN  = '0.75s';
+            let flown = false;
+            let clone = null;
+            let settleTimer = null;
+            let returning = false;
+            let origW = 0, origH = 0;
+
+            function nearBottom() {
+                return window.scrollY + window.innerHeight >= document.body.offsetHeight - 100;
+            }
+
+            function flyOut() {
+                if (flown) return;
+                // if mid-return, cancel it and snap clone to wherever it is now
+                if (returning) {
+                    returning = false;
+                    clone.style.transition = 'none';
+                    clearTimeout(settleTimer);
+                }
+
+                if (!clone) {
+                    const r = orig.getBoundingClientRect();
+                    clone = orig.cloneNode(true);
+                    clone.removeAttribute('id');
+                    clone.classList.add('flying-clone');
+                    origW = r.width;
+                    origH = r.height;
+                    clone.style.cssText = `
+                        position: fixed;
+                        top: ${r.top}px;
+                        left: ${r.left}px;
+                        width: ${r.width}px;
+                        height: ${r.height}px;
+                        font-size: 0.875rem;
+                        margin: 0;
+                        z-index: 9999;
+                        transition: none;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    `;
+                    clone.addEventListener('click', () => window.openModal());
+                    document.body.appendChild(clone);
+                    orig.style.opacity = '0';
+                }
+
+                flown = true;
+
+                requestAnimationFrame(() => requestAnimationFrame(() => {
+                    const t = `top ${DUR_OUT} ${EASE}, left ${DUR_OUT} ${EASE}, width ${DUR_OUT} ${EASE}, height ${DUR_OUT} ${EASE}, font-size ${DUR_OUT} ${EASE}, transform ${DUR_OUT} ${EASE}`;
+                    clone.style.transition = t;
+                    clone.style.top = '50%';
+                    clone.style.left = '50%';
+                    clone.style.width = (origW * 2) + 'px';
+                    clone.style.height = (origH * 2) + 'px';
+                    clone.style.fontSize = '1.75rem';
+                    clone.style.transform = 'translate(-50%, -50%) scale(1.05)';
+
+                    settleTimer = setTimeout(() => {
+                        if (clone) clone.style.transform = 'translate(-50%, -50%) scale(1)';
+                    }, 1100);
+                }));
+            }
+
+            function flyBack() {
+                if (!flown || returning) return;
+                returning = true;
+                flown = false;
+                clearTimeout(settleTimer);
+
+                const r = orig.getBoundingClientRect();
+                // animate clone back to nav position
+                const t = `top ${DUR_IN} ${EASE}, left ${DUR_IN} ${EASE}, width ${DUR_IN} ${EASE}, height ${DUR_IN} ${EASE}, font-size ${DUR_IN} ${EASE}, transform ${DUR_IN} ${EASE}`;
+                clone.style.transition = t;
+                clone.style.top = r.top + 'px';
+                clone.style.left = r.left + 'px';
+                clone.style.width = origW + 'px';
+                clone.style.height = origH + 'px';
+                clone.style.fontSize = '0.875rem';
+                clone.style.transform = 'none';
+
+                const dying = clone;
+                settleTimer = setTimeout(() => {
+                    if (dying) dying.remove();
+                    if (clone === dying) clone = null;
+                    orig.style.opacity = '1';
+                    returning = false;
+                }, 750);
+            }
+
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (ticking) return;
+                ticking = true;
+                requestAnimationFrame(() => {
+                    nearBottom() ? flyOut() : flyBack();
+                    ticking = false;
+                });
+            }, { passive: true });
+        })();
+
+    </script>
 </body>
+
 </html>
