@@ -417,6 +417,36 @@
             box-shadow: 0 0 0 3px rgba(255, 107, 44, 0.15);
         }
 
+        .modal-input.input-error {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+            animation: shake 0.35s ease;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20% {
+                transform: translateX(-6px);
+            }
+
+            40% {
+                transform: translateX(6px);
+            }
+
+            60% {
+                transform: translateX(-4px);
+            }
+
+            80% {
+                transform: translateX(4px);
+            }
+        }
+
         .modal-submit {
             width: 100%;
             margin-top: 4px;
@@ -1116,12 +1146,13 @@
             <button class="modal-close" id="close-modal" aria-label="Close">×</button>
             <h2 class="modal-heading" id="modal-title">Apply now before the waitlist closes.</h2>
             <p class="modal-sub">Drop your details below. We’ll send you an instant access link that you can leave
-                sitting unread in your inbox for the next three to five business days.</p>
+                sitting unread in your inbox for the next three to five business days.🎉🎉</p>
             <form class="modal-form" id="signup-form" novalidate>
                 <input class="modal-input" type="text" id="modal-name" name="name" placeholder="Your name" required />
                 <input class="modal-input" type="email" id="modal-email" name="email" placeholder="Your email"
                     required />
                 <button type="submit" class="cta-btn modal-submit">Apply Now</button>
+                <p class="form-error" id="form-error" style="display:none;color:#ef4444;font-size:0.85rem;text-align:center;margin-top:8px;">Something went wrong. Please try again.</p>
             </form>
         </div>
     </div>
@@ -1326,14 +1357,69 @@
         })();
 
 
-        form.addEventListener('submit', e => {
+        form.addEventListener('submit', async e => {
             e.preventDefault();
-            const name = document.getElementById('modal-name').value.trim();
-            const email = document.getElementById('modal-email').value.trim();
-            console.log('Signup:', { name, email });
-            alert(`You're in, ${name || 'friend'}! We'll be in touch at ${email}.`);
-            form.reset();
-            closeModal();
+
+            const nameEl = document.getElementById('modal-name');
+            const emailEl = document.getElementById('modal-email');
+            const submitBtn = form.querySelector('.modal-submit');
+            const name = nameEl.value.trim();
+            const email = emailEl.value.trim();
+
+            // ── Validation ──
+            let valid = true;
+            [nameEl, emailEl].forEach(el => el.classList.remove('input-error'));
+
+            if (!name) {
+                nameEl.classList.add('input-error');
+                nameEl.addEventListener('animationend', () => nameEl.classList.remove('input-error'), { once: true });
+                valid = false;
+            }
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                emailEl.classList.add('input-error');
+                emailEl.addEventListener('animationend', () => emailEl.classList.remove('input-error'), { once: true });
+                valid = false;
+            }
+            if (!valid) return;
+
+            // ── Loading state ──
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Sending...';
+            submitBtn.disabled = true;
+
+            // ── POST to ConvertKit ──
+            try {
+                const res = await fetch('https://api.convertkit.com/v3/forms/9525801/subscribe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        api_key: 'DU-ryFa8xDbaGVfW35liKQ',
+                        first_name: name,
+                        email: email
+                    })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok || data.error) {
+                    throw new Error(data.message || 'Submission failed');
+                }
+
+                // ── Success ──
+                submitBtn.textContent = "You're in! 🎉";
+                form.reset();
+                setTimeout(() => {
+                    window.location.href = 'https://www.instagram.com/andyandhangyi';
+                }, 1200);
+
+            } catch (err) {
+                console.error('ConvertKit error:', err);
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                const errorEl = document.getElementById('form-error');
+                errorEl.style.display = 'block';
+                setTimeout(() => { errorEl.style.display = 'none'; }, 4000);
+            }
         });
 
         /* ── CTA 3D BUTTON TILT ── */
