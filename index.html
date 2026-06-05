@@ -955,13 +955,14 @@
                 line-height: 1.0;
             }
         }
+        @media (max-width: 768px) { #main-nav { display: none !important; } }
     </style>
 </head>
 
 <body>
 
     <!-- ── NAV ── -->
-    <nav
+    <nav id="main-nav"
         style="position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px 28px;">
         <span
             style="font-size:0.9rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#f0ece4;">Content-to-Cashflow™
