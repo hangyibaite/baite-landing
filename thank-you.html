@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>You're In — Content-to-Cashflow™</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #08080a;
+            color: #f0ece4;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+        }
+
+        .container {
+            max-width: 70vw;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            align-items: center;
+            text-align: center;
+        }
+
+        .fade-up {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.65s ease forwards;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .eyebrow {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #FF6B2C;
+            margin-bottom: 20px;
+            animation-delay: 0.1s;
+        }
+
+        .heading {
+            font-size: clamp(2.8rem, 7vw, 5rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 0.9;
+            color: #f0ece4;
+            margin-bottom: 32px;
+            animation-delay: 0.2s;
+        }
+
+        .body-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-bottom: 36px;
+            max-width: 50vw;
+        }
+
+        .body-copy p {
+            font-size: 1.05rem;
+            font-weight: 400;
+            line-height: 1.6;
+            color: #c8c4bc;
+        }
+
+        .body-copy strong {
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .body-copy em {
+            color: #f0ece4;
+            font-style: italic;
+        }
+
+        .p1 {
+            animation-delay: 0.3s;
+        }
+
+        .p2 {
+            animation-delay: 0.4s;
+        }
+
+        .p3 {
+            animation-delay: 0.5s;
+        }
+
+        .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            margin-bottom: 36px;
+            animation-delay: 0.5s;
+        }
+
+        .ig-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 36px;
+            border-radius: 60px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #fff;
+            text-decoration: none;
+            background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            border: 3px solid #ffffff;
+            box-shadow: 0 0 30px rgba(220, 39, 67, 0.4), 0 0 80px rgba(220, 39, 67, 0.15);
+            transition: transform 0.25s ease, box-shadow 0.3s ease;
+            animation-delay: 0.6s;
+            align-self: center;
+        }
+
+        .ig-btn:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 0 50px rgba(220, 39, 67, 0.55), 0 0 100px rgba(220, 39, 67, 0.2);
+        }
+
+        .ig-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+
+        @media (max-width: 768px) {
+            .container { max-width: 90vw; }
+            .body-copy { max-width: 90vw; }
+        }
+
+        @media (max-width: 480px) {
+            .container { max-width: 88vw; }
+            .body-copy { max-width: 88vw; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="heading fade-up">You're on the list.</h1>
+
+        <div class="body-copy">
+            <p class="p1 fade-up">Somewhere in a <em>dark, chilly data center</em>, a server just blinked a little
+                brighter because your data arrived. You are <strong>officially on the waitlist.</strong></p>
+            <p class="p2 fade-up">Your prize for completing those 5 questions? <strong><em>Nothing right
+                        now...</em></strong> But you did just unlock access to the <strong>inner circle.</strong></p>
+            <p class="p3 fade-up">I'll send you an email shortly to prove I'm not lying — to confirm you've
+                <strong>really</strong> made it onto the waitlist. <strong>Go check your inbox 📨</strong> to make sure
+                my welcome message didn't get lost in your <em>spam folder.</em>
+            </p>
+        </div>
+
+        <div class="divider fade-up"></div>
+
+        <a href="https://instagram.com/andyandhangyi" target="_blank" rel="noopener" class="ig-btn fade-up">
+            <img src="assets/Instagram_icon.png" alt="Instagram" class="ig-icon" />
+            Follow on Instagram
+        </a>
+    </div>
+</body>
+
+</html>

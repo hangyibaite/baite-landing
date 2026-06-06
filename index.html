@@ -346,6 +346,7 @@
             padding: 40px 36px;
             max-width: 440px;
             width: 100%;
+            min-height: 420px;
             position: relative;
             transform: translateY(16px);
             transition: transform 0.25s ease;
@@ -955,7 +956,81 @@
                 line-height: 1.0;
             }
         }
-        @media (max-width: 768px) { #main-nav { display: none !important; } }
+
+        @media (max-width: 768px) {
+            #main-nav {
+                display: none !important;
+            }
+        }
+
+        /* ── MODAL MULTI-STEP ── */
+        .modal-progress-wrap {
+            margin-bottom: 20px;
+        }
+
+        .modal-progress-label {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+        }
+
+        .modal-progress-track {
+            width: 100%;
+            height: 9px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 99px;
+            border: 1px solid rgba(255, 107, 44, 0.35);
+            overflow: hidden;
+        }
+
+        .modal-progress-fill {
+            height: 100%;
+            background: #FF6B2C;
+            box-shadow: 0 0 14px #FF6B2CBB;
+            border-radius: 99px;
+            width: 0%;
+            transition: width 0.35s ease;
+        }
+
+        .modal-q-heading {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            color: var(--text);
+            margin-bottom: 20px;
+        }
+
+        .modal-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .modal-option {
+            width: 100%;
+            text-align: left;
+            padding: 14px 18px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f0ece4;
+            font-family: inherit;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s, color 0.15s;
+        }
+
+        .modal-option:hover {
+            border-color: #FF6B2C;
+            background: rgba(255, 107, 44, 0.08);
+        }
+
+        .modal-option.selected {
+            background: #FF6B2C;
+            color: #fff;
+            border-color: #FF6B2C;
+        }
     </style>
 </head>
 
@@ -1145,16 +1220,44 @@
     <div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div class="modal-box">
             <button class="modal-close" id="close-modal" aria-label="Close">×</button>
-            <h2 class="modal-heading" id="modal-title">Apply now before the waitlist closes.</h2>
-            <p class="modal-sub">Drop your details below. We’ll send you an instant access link that you can leave
-                sitting unread in your inbox for the next three to five business days.🎉🎉</p>
-            <form class="modal-form" id="signup-form" novalidate>
-                <input class="modal-input" type="text" id="modal-name" name="name" placeholder="Your name" required />
-                <input class="modal-input" type="email" id="modal-email" name="email" placeholder="Your email"
-                    required />
-                <button type="submit" class="cta-btn modal-submit">Apply Now</button>
-                <p class="form-error" id="form-error" style="display:none;color:#ef4444;font-size:0.85rem;text-align:center;margin-top:8px;">Something went wrong. Please try again.</p>
-            </form>
+
+            <!-- Progress bar (steps 1-5 only) -->
+            <div class="modal-progress-wrap" id="modal-progress-wrap" style="display:none;">
+                <p class="modal-progress-label" id="modal-progress-label">Question 1 of 5</p>
+                <div class="modal-progress-track">
+                    <div class="modal-progress-fill" id="modal-progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- Step 0: name + email -->
+            <div class="modal-step" id="modal-step-0">
+                <h2 class="modal-heading" id="modal-title">Apply now before the waitlist closes.</h2>
+                <p class="modal-sub">Drop your details below. We’ll send you an instant access link that you can leave
+                    sitting unread in your inbox for the next three to five business days.🎉🎉</p>
+                <form class="modal-form" id="signup-form" novalidate>
+                    <input class="modal-input" type="text" id="modal-name" name="name" placeholder="Your name"
+                        required />
+                    <input class="modal-input" type="email" id="modal-email" name="email" placeholder="Your email"
+                        required />
+                    <button type="submit" class="cta-btn modal-submit">Apply Now</button>
+                    <p class="form-error" id="form-error"
+                        style="display:none;color:#ef4444;font-size:0.85rem;text-align:center;margin-top:8px;">Something
+                        went wrong. Please try again.</p>
+                </form>
+            </div>
+
+            <!-- Step intro: gatekeeper interstitial -->
+            <div class="modal-step" id="modal-step-intro" style="display:none;">
+                <h2 class="modal-heading" style="margin-bottom:14px;">Halthe, traveler! 🛑</h2>
+                <p class="modal-sub">Our automated gatekeeper needs you to answer 5 quick questions before you can join the waitlist. Don't worry — they're all MCQs.</p>
+                <button type="button" class="cta-btn modal-submit" id="modal-intro-btn">Let's go →</button>
+            </div>
+
+            <!-- Steps 1-5: questions -->
+            <div class="modal-step" id="modal-step-q" style="display:none;">
+                <h2 class="modal-q-heading" id="modal-q-text"></h2>
+                <div class="modal-options" id="modal-options"></div>
+            </div>
         </div>
     </div>
 
@@ -1292,21 +1395,189 @@
             updateWI();
         })();
 
-        /* ── MODAL ── */
+        /* ── MODAL MULTI-STEP ── */
         const overlay = document.getElementById('modal-overlay');
         const openBtn = document.getElementById('open-modal');
         const closeBtn = document.getElementById('close-modal');
         const form = document.getElementById('signup-form');
 
+        const stepEl0     = document.getElementById('modal-step-0');
+        const stepElIntro = document.getElementById('modal-step-intro');
+        const stepElQ     = document.getElementById('modal-step-q');
+        const progressWrap = document.getElementById('modal-progress-wrap');
+        const progressFill = document.getElementById('modal-progress-fill');
+        const progressLbl = document.getElementById('modal-progress-label');
+        const qText = document.getElementById('modal-q-text');
+        const optionsEl = document.getElementById('modal-options');
+
+        // ConvertKit credentials (reuse from existing form)
+        const CK_API_KEY = 'DU-ryFa8xDbaGVfW35liKQ';
+        const CK_FORM_ID = '9525801';
+
+        // TODO: replace TAG_IDs once created in ConvertKit dashboard
+        // Tags needed:
+        //   q1-posting-no-traction, q1-views-no-money, q1-audience-no-offer, q1-starting-from-zero
+        //   q2-first-client-60-days, q2-leads-on-autopilot, q2-replace-9-5, q2-scale-to-10k
+        //   q3-winging-strategy, q3-courses-no-results, q3-tried-outreach, q3-starting-from-zero
+        //   q4-build-with-me, q4-build-for-me, q4-tools-and-templates, q4-full-package
+        //   q5-pinky-promise-yes, q5-best-effort, q5-just-looking, q5-pinky-promise-no
+        // Get tag IDs from ConvertKit API:
+        // GET https://api.convertkit.com/v3/tags?api_key=DU-ryFa8xDbaGVfW35liKQ
+        const TAG_IDS = {
+            'q1-posting-no-traction':  20107031,
+            'q1-views-no-money':       20107035,
+            'q1-audience-no-offer':    20107036,
+            'q1-starting-from-zero':   20107037,
+            'q2-first-client-60-days': 20107040,
+            'q2-leads-on-autopilot':   20107041,
+            'q2-scale-to-10-30k':      20107043,
+            'q2-scale-to-30k-plus':    20107042,
+            'q3-winging-strategy':     20107044,
+            'q3-courses-no-results':   20107045,
+            'q3-tried-outreach':       20107046,
+            'q3-starting-from-zero':   20107047,
+            'q4-build-with-me':        20107048,
+            'q4-build-for-me':         20107049,
+            'q4-tools-and-templates':  20107051,
+            'q4-full-package':         20107052,
+            'q5-pinky-promise-yes':    20107053,
+            'q5-pinky-promise-no':     20107057,
+        };
+
+        const QUESTIONS = [
+            {
+                text: 'Where are you right now?',
+                options: [
+                    { label: 'Posting but getting zero traction', tag: 'q1-posting-no-traction' },
+                    { label: 'Getting views but making no money', tag: 'q1-views-no-money' },
+                    { label: 'Have an audience, no monetization system', tag: 'q1-audience-no-offer' },
+                    { label: "Haven't started posting yet", tag: 'q1-starting-from-zero' },
+                ]
+            },
+            {
+                text: 'What does winning look like for you in the next 90 days?',
+                options: [
+                    { label: 'Land my first paying client', tag: 'q2-first-client-60-days' },
+                    { label: 'Leads coming in on autopilot', tag: 'q2-leads-on-autopilot' },
+                    { label: 'Scale to 10–30k/mo', tag: 'q2-scale-to-10-30k' },
+                    { label: 'Scale to >30k/mo', tag: 'q2-scale-to-30k-plus' },
+                ]
+            },
+            {
+                text: 'What have you already tried?',
+                options: [
+                    { label: "Honestly, just wingin' it", tag: 'q3-winging-strategy' },
+                    { label: 'Bought courses, got zero results', tag: 'q3-courses-no-results' },
+                    { label: 'DMs and outreach, felt too spammy', tag: 'q3-tried-outreach' },
+                    { label: 'Nothing yet, starting from zero', tag: 'q3-starting-from-zero' },
+                ]
+            },
+            {
+                text: 'What kind of support do you need most right now?',
+                options: [
+                    { label: 'Build it with me', tag: 'q4-build-with-me' },
+                    { label: 'Build it all for me', tag: 'q4-build-for-me' },
+                    { label: 'Just tools and templates', tag: 'q4-tools-and-templates' },
+                    { label: 'The whole package, all of it', tag: 'q4-full-package' },
+                ]
+            },
+            {
+                text: "Do you pinky promise to actually show up and use what's inside?",
+                options: [
+                    { label: "Yes, I'm ready to commit ✅", tag: 'q5-pinky-promise-yes' },
+                    { label: 'No, I hoard free things 💀', tag: 'q5-pinky-promise-no' },
+                ]
+            },
+        ];
+
+        let currentStep = 0;  // 0 = name/email, 1-5 = questions
+        let userData = { name: '', email: '' };
+        let selectedTags = {};
+
+        function showStep(step) {
+            currentStep = step;
+            stepEl0.style.display     = 'none';
+            stepElIntro.style.display = 'none';
+            stepElQ.style.display     = 'none';
+            progressWrap.style.display = 'none';
+
+            if (step === 0) {
+                stepEl0.style.display = '';
+            } else if (step === 'intro') {
+                stepElIntro.style.display = '';
+            } else {
+                stepElQ.style.display = '';
+                progressWrap.style.display = '';
+                const qIndex = step - 1;
+                const pct = step * 20;
+                progressFill.style.width = pct + '%';
+                progressLbl.textContent = `Question ${step} of 5`;
+                const q = QUESTIONS[qIndex];
+                qText.textContent = q.text;
+                optionsEl.innerHTML = '';
+                q.options.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'modal-option';
+                    btn.textContent = opt.label;
+                    btn.addEventListener('click', () => selectOption(btn, opt.tag, step));
+                    optionsEl.appendChild(btn);
+                });
+            }
+        }
+
+        document.getElementById('modal-intro-btn').addEventListener('click', () => showStep(1));
+
+        function selectOption(btn, tag, step) {
+            // prevent double-click
+            optionsEl.querySelectorAll('.modal-option').forEach(b => b.disabled = true);
+            btn.classList.add('selected');
+            selectedTags['q' + step] = tag;
+
+            setTimeout(() => {
+                if (step < 5) {
+                    showStep(step + 1);
+                } else {
+                    fireTagsAndRedirect();
+                }
+            }, 225);
+        }
+
+        async function fireTagsAndRedirect() {
+            const tagIds = Object.values(selectedTags)
+                .map(tag => TAG_IDS[tag])
+                .filter(id => id != null);
+
+            try {
+                await fetch(`https://api.convertkit.com/v3/forms/${CK_FORM_ID}/subscribe`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        api_key: CK_API_KEY,
+                        first_name: userData.name,
+                        email: userData.email,
+                        tags: tagIds
+                    })
+                });
+            } catch (err) {
+                console.error('ConvertKit error:', err);
+            }
+            window.location.href = 'thank-you.html';
+        }
+
         function openModal() { overlay.classList.add('open'); }
-        function closeModal() { overlay.classList.remove('open'); }
+        function closeModal() {
+            overlay.classList.remove('open');
+            // reset to step 0 but keep name/email filled
+            showStep(0);
+            selectedTags = {};
+        }
         window.openModal = openModal;
 
         openBtn.addEventListener('click', openModal);
         document.getElementById('open-modal-nav').addEventListener('click', openModal);
         closeBtn.addEventListener('click', closeModal);
         overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
         /* ── CTA GLARE (all buttons) ── */
@@ -1358,7 +1629,7 @@
         })();
 
 
-        form.addEventListener('submit', async e => {
+        form.addEventListener('submit', e => {
             e.preventDefault();
 
             const nameEl = document.getElementById('modal-name');
@@ -1383,44 +1654,9 @@
             }
             if (!valid) return;
 
-            // ── Loading state ──
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Sending...';
-            submitBtn.disabled = true;
-
-            // ── POST to ConvertKit ──
-            try {
-                const res = await fetch('https://api.convertkit.com/v3/forms/9525801/subscribe', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        api_key: 'DU-ryFa8xDbaGVfW35liKQ',
-                        first_name: name,
-                        email: email
-                    })
-                });
-
-                const data = await res.json();
-
-                if (!res.ok || data.error) {
-                    throw new Error(data.message || 'Submission failed');
-                }
-
-                // ── Success ──
-                submitBtn.textContent = "You're in! 🎉";
-                form.reset();
-                setTimeout(() => {
-                    window.location.href = 'https://www.instagram.com/andyandhangyi';
-                }, 1200);
-
-            } catch (err) {
-                console.error('ConvertKit error:', err);
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-                const errorEl = document.getElementById('form-error');
-                errorEl.style.display = 'block';
-                setTimeout(() => { errorEl.style.display = 'none'; }, 4000);
-            }
+            // ── Store user data and advance immediately ──
+            userData = { name, email };
+            showStep('intro');
         });
 
         /* ── CTA 3D BUTTON TILT ── */
