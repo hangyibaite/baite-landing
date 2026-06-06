@@ -29,7 +29,51 @@
             padding: 40px 24px;
         }
 
+        /* ── CANVAS + ORBS ── */
+        #hero-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            will-change: transform;
+        }
+
+        #orb-orange {
+            width: 360px;
+            height: 360px;
+            background: #FF6B2C;
+            filter: blur(120px);
+            opacity: 0.19;
+            top: 50%;
+            left: 50%;
+            margin-top: -180px;
+            margin-left: -180px;
+        }
+
+        #orb-purple {
+            width: 420px;
+            height: 420px;
+            background: #8B5CF6;
+            filter: blur(120px);
+            opacity: 0.19;
+            top: 50%;
+            left: 50%;
+            margin-top: -210px;
+            margin-left: -210px;
+        }
+
         .container {
+            position: relative;
+            z-index: 2;
             max-width: 70vw;
             width: 100%;
             display: flex;
@@ -105,15 +149,19 @@
             animation-delay: 0.4s;
         }
 
-        .p3 {
-            animation-delay: 0.5s;
-        }
-
         .divider {
+            width: 100%;
             height: 1px;
             background: rgba(255, 255, 255, 0.08);
             margin-bottom: 36px;
             animation-delay: 0.5s;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         .ig-btn {
@@ -132,7 +180,6 @@
             box-shadow: 0 0 30px rgba(220, 39, 67, 0.4), 0 0 80px rgba(220, 39, 67, 0.15);
             transition: transform 0.25s ease, box-shadow 0.3s ease;
             animation-delay: 0.6s;
-            align-self: center;
         }
 
         .ig-btn:hover {
@@ -147,28 +194,67 @@
             object-fit: cover;
         }
 
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 32px;
+            border-radius: 60px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            color: rgba(10, 10, 12, 0.85);
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px) saturate(140%);
+            -webkit-backdrop-filter: blur(16px) saturate(140%);
+            border: 1px solid rgba(255, 255, 255, 0.55);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.6), 0 4px 24px rgba(0, 0, 0, 0.25);
+            transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+            cursor: pointer;
+            animation-delay: 0.6s;
+        }
+
+        .share-btn:hover {
+            background: rgba(255, 255, 255, 0.88);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.8), 0 8px 32px rgba(0, 0, 0, 0.35);
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 768px) {
-            .container { max-width: 90vw; }
-            .body-copy { max-width: 90vw; }
+            .container {
+                max-width: 90vw;
+            }
+
+            .body-copy {
+                max-width: 90vw;
+            }
         }
 
         @media (max-width: 480px) {
-            .container { max-width: 88vw; }
-            .body-copy { max-width: 88vw; }
+            .container {
+                max-width: 88vw;
+            }
+
+            .body-copy {
+                max-width: 88vw;
+            }
         }
     </style>
 </head>
 
 <body>
+    <canvas id="hero-canvas"></canvas>
+    <div class="orb" id="orb-orange"></div>
+    <div class="orb" id="orb-purple"></div>
+
     <div class="container">
         <h1 class="heading fade-up">You're on the list.</h1>
 
         <div class="body-copy">
             <p class="p1 fade-up">Somewhere in a <em>dark, chilly data center</em>, a server just blinked a little
                 brighter because your data arrived. You are <strong>officially on the waitlist.</strong></p>
-            <p class="p2 fade-up">Your prize for completing those 5 questions? <strong><em>Nothing right
-                        now...</em></strong> But you did just unlock access to the <strong>inner circle.</strong></p>
-            <p class="p3 fade-up">I'll send you an email shortly to prove I'm not lying — to confirm you've
+            <p class="p2 fade-up">I'll send you an email shortly to prove I'm not lying — to confirm you've
                 <strong>really</strong> made it onto the waitlist. <strong>Go check your inbox 📨</strong> to make sure
                 my welcome message didn't get lost in your <em>spam folder.</em>
             </p>
@@ -176,11 +262,114 @@
 
         <div class="divider fade-up"></div>
 
-        <a href="https://instagram.com/andyandhangyi" target="_blank" rel="noopener" class="ig-btn fade-up">
-            <img src="assets/Instagram_icon.png" alt="Instagram" class="ig-icon" />
-            Follow on Instagram
-        </a>
+        <div class="btn-row fade-up" style="animation-delay:0.6s;">
+            <a href="https://instagram.com/andyandhangyi" target="_blank" rel="noopener" class="ig-btn">
+                <img src="assets/Instagram_icon.png" alt="Instagram" class="ig-icon" />
+                Follow on IG
+            </a>
+            <a href="#" class="share-btn" id="share-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 2L11 13" />
+                    <path d="M22 2L15 22L11 13L2 9L22 2Z" />
+                </svg>
+                Share with a friend
+            </a>
+        </div>
     </div>
+
+    <script>
+        /* ── CANVAS GRID + DISTORTION + ORBS ── */
+        (function () {
+            const canvas = document.getElementById('hero-canvas');
+            const orbOrange = document.getElementById('orb-orange');
+            const orbPurple = document.getElementById('orb-purple');
+            const ctx = canvas.getContext('2d');
+            const GRID = 60, RADIUS = 180, STRENGTH = 22;
+            let W, H, rawMX = 0, rawMY = 0, smMX = 0, smMY = 0;
+            let rawX = 0, rawY = 0, oX = 0, oY = 0, pX = 0, pY = 0;
+
+            function resize() {
+                W = canvas.width = window.innerWidth;
+                H = canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            window.addEventListener('mousemove', e => {
+                rawMX = rawX = e.clientX;
+                rawMY = rawY = e.clientY;
+            });
+
+            function drawGrid() {
+                ctx.clearRect(0, 0, W, H);
+                ctx.strokeStyle = 'rgba(255,255,255,0.150)';
+                ctx.lineWidth = 1;
+                const cols = Math.ceil(W / GRID) + 2;
+                const rows = Math.ceil(H / GRID) + 2;
+                ctx.beginPath();
+                for (let c = 0; c <= cols; c++) {
+                    const pts = [];
+                    for (let r = 0; r <= rows; r++) {
+                        let gx = c * GRID, gy = r * GRID;
+                        const dx = gx - smMX, dy = gy - smMY;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < RADIUS && dist > 0) { const p = (1 - dist / RADIUS) * STRENGTH; gx += dx / dist * p; gy += dy / dist * p; }
+                        pts.push([gx, gy]);
+                    }
+                    ctx.moveTo(pts[0][0], pts[0][1]);
+                    for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+                }
+                for (let r = 0; r <= rows; r++) {
+                    const pts = [];
+                    for (let c = 0; c <= cols; c++) {
+                        let gx = c * GRID, gy = r * GRID;
+                        const dx = gx - smMX, dy = gy - smMY;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < RADIUS && dist > 0) { const p = (1 - dist / RADIUS) * STRENGTH; gx += dx / dist * p; gy += dy / dist * p; }
+                        pts.push([gx, gy]);
+                    }
+                    ctx.moveTo(pts[0][0], pts[0][1]);
+                    for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+                }
+                ctx.stroke();
+            }
+
+            function tick() {
+                smMX += (rawMX - smMX) * 0.08;
+                smMY += (rawMY - smMY) * 0.08;
+                drawGrid();
+                oX += (rawX - oX) * 0.12; oY += (rawY - oY) * 0.12;
+                pX += (rawX - pX) * 0.06; pY += (rawY - pY) * 0.06;
+                const sw = window.innerWidth, sh = window.innerHeight;
+                orbOrange.style.transform = `translate(${oX - sw / 2}px, ${oY - sh / 2}px)`;
+                orbPurple.style.transform = `translate(${pX - sw / 2}px, ${pY - sh / 2}px)`;
+                requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        })();
+
+        /* ── SHARE BUTTON ── */
+        document.getElementById('share-btn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const shareData = {
+                title: 'Content-to-Cashflow™ Course',
+                text: 'Just joined the waitlist for this free course. Def worth checking out and first 3 weeks are free for u too:',
+                url: 'https://join.baitestudio.com'
+            };
+            if (navigator.share) {
+                try { await navigator.share(shareData); } catch { }
+            } else {
+                await navigator.clipboard.writeText(
+                    'Just joined the waitlist for this course. Def worth checking out and first 3 weeks are free for u too: https://join.baitestudio.com'
+                );
+                const btn = document.getElementById('share-btn');
+                const original = btn.innerHTML;
+                btn.innerHTML = '✓ Link copied';
+                setTimeout(() => { btn.innerHTML = original; }, 2500);
+            }
+        });
+    </script>
 </body>
 
 </html>
