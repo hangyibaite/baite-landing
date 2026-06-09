@@ -346,7 +346,6 @@
             padding: 40px 36px;
             max-width: 440px;
             width: 100%;
-            min-height: 420px;
             position: relative;
             transform: translateY(16px);
             transition: transform 0.25s ease;
@@ -418,10 +417,14 @@
             box-shadow: 0 0 0 3px rgba(255, 107, 44, 0.15);
         }
 
+        .modal-input.input-error,
+        .shake {
+            animation: shake 0.35s ease;
+        }
+
         .modal-input.input-error {
             border-color: #ef4444;
             box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
-            animation: shake 0.35s ease;
         }
 
         @keyframes shake {
@@ -1258,6 +1261,7 @@
             <div class="modal-step" id="modal-step-q" style="display:none;">
                 <h2 class="modal-q-heading" id="modal-q-text"></h2>
                 <div class="modal-options" id="modal-options"></div>
+                <p id="modal-registering" style="display:none;text-align:center;font-size:0.85rem;color:var(--text-dim);margin-top:16px;letter-spacing:0.04em;">Registering…</p>
             </div>
         </div>
     </div>
@@ -1442,7 +1446,6 @@
             'q4-tools-and-templates':  20107051,
             'q4-full-package':         20107052,
             'q5-pinky-promise-yes':    20107053,
-            'q5-pinky-promise-no':     20107057,
         };
 
         const QUESTIONS = [
@@ -1452,7 +1455,7 @@
                     { label: 'Posting but getting zero traction', tag: 'q1-posting-no-traction' },
                     { label: 'Getting views but making no money', tag: 'q1-views-no-money' },
                     { label: 'Have an audience, no monetization system', tag: 'q1-audience-no-offer' },
-                    { label: "Haven't started posting yet", tag: 'q1-starting-from-zero' },
+                    { label: 'Monetised and scaling', tag: 'q1-starting-from-zero' },
                 ]
             },
             {
@@ -1530,6 +1533,19 @@
         document.getElementById('modal-intro-btn').addEventListener('click', () => showStep(1));
 
         function selectOption(btn, tag, step) {
+            if (tag === 'q5-pinky-promise-no') {
+                btn.classList.add('shake');
+                btn.style.background = 'rgba(220,38,38,0.18)';
+                btn.style.borderColor = 'rgba(220,38,38,0.6)';
+                btn.style.color = '#f87171';
+                setTimeout(() => {
+                    btn.classList.remove('shake');
+                    btn.style.background = '';
+                    btn.style.borderColor = '';
+                    btn.style.color = '';
+                }, 600);
+                return;
+            }
             // prevent double-click
             optionsEl.querySelectorAll('.modal-option').forEach(b => b.disabled = true);
             btn.classList.add('selected');
@@ -1545,6 +1561,10 @@
         }
 
         async function fireTagsAndRedirect() {
+            // Show "Registering…"
+            const registeringEl = document.getElementById('modal-registering');
+            if (registeringEl) registeringEl.style.display = '';
+
             const tagIds = Object.values(selectedTags)
                 .map(tag => TAG_IDS[tag])
                 .filter(id => id != null);
