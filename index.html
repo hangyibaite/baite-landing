@@ -4,9 +4,21 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Content-to-Cashflow™ Course</title>
+    <title>Content-to-Cashflow™ Academy</title>
+    <meta name="description" content="Content-to-Cashflow™ Academy is the fastest way to 2x your revenue. Join the waitlist now completely for free, limited to 500 spots.">
+    <meta property="og:title" content="Content-to-Cashflow™ Academy">
+    <meta property="og:description" content="Content-to-Cashflow™ Academy is the fastest way to 2x your revenue. Join the waitlist now completely for free, limited to 500 spots.">
+    <meta property="og:image" content="https://join.baitestudio.com/assets/images/og-preview.png">
+    <meta property="og:url" content="https://join.baitestudio.com">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Content-to-Cashflow™ Academy">
+    <meta name="twitter:description" content="The fastest way to 2x your revenue. Start an agency or coaching business and get your first client in 60 days. First 3 weeks free.">
+    <meta name="twitter:image" content="https://join.baitestudio.com/assets/images/og-preview.png">
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://www.youtube-nocookie.com" />
+    <link rel="preconnect" href="https://i.ytimg.com" />
     <link
         href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet" />
@@ -463,8 +475,8 @@
             position: relative;
             z-index: 4;
             margin-top: 40px;
-            /* desktop gap */
             flex-shrink: 0;
+            aspect-ratio: 16 / 9;
         }
 
         /* ── VSL (section kept for scroll JS reference) ── */
@@ -472,14 +484,32 @@
             display: contents;
         }
 
-        .vsl-aspect {
-            position: relative;
+        .vsl-video {
             width: 100%;
-            padding-top: 56.25%;
-            background: rgba(255, 255, 255, 0.92);
+            height: 100%;
             border-radius: 16px;
-            overflow: hidden;
+            display: block;
             box-shadow: 0 0 80px rgba(0, 0, 0, 0.5);
+        }
+
+        .vsl-overlay {
+            position: absolute;
+            z-index: 5;
+            pointer-events: auto;
+        }
+
+        .vsl-overlay-top {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+        }
+
+        .vsl-overlay-bottom {
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 45px;
         }
 
         /* ── CTA EDITORIAL (replaces pain) ── */
@@ -1082,7 +1112,13 @@
 
         <!-- VSL wrapper inside hero so margin-top is the exact gap -->
         <div class="vsl-wrapper" id="vsl-wrapper">
-            <div class="vsl-aspect"></div>
+            <iframe class="vsl-video"
+                src="https://www.youtube-nocookie.com/embed/3QxwNvOrKkE?rel=0&modestbranding=1&controls=0&showinfo=0&iv_load_policy=3&disablekb=1"
+                title="VSL" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+            <div class="vsl-overlay vsl-overlay-top"></div>
+            <div class="vsl-overlay vsl-overlay-bottom"></div>
         </div>
     </section>
 
@@ -1125,8 +1161,8 @@
                 </div>
                 <div class="tilt-wrap">
                     <div class="glass-card">
-                        <h3 class="card-title">The Bot Army</h3>
-                        <p class="card-desc">Manychat flows, automated DMs, and the army of little robots that run your
+                        <h3 class="card-title">The Content Army</h3>
+                        <p class="card-desc">Content scripting and funnels, automated DMs, and the army of little robots that run your
                             front-end while you sleep.</p>
                     </div>
                 </div>
