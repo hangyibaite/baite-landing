@@ -175,7 +175,7 @@
                 inset 0 1px 1px rgba(255, 255, 255, 0.4),
                 0 8px 32px 0 rgba(0, 0, 0, 0.5);
             margin-bottom: 28px;
-            transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, translate 0.3s ease;
         }
 
         .social-proof-pill:hover {
@@ -186,6 +186,15 @@
             box-shadow:
                 inset 0 1px 2px rgba(255, 255, 255, 0.6),
                 0 12px 40px 0 rgba(0, 0, 0, 0.7);
+            translate: 0 -3px;
+        }
+
+        .social-proof-now {
+            transition: color 0.3s ease;
+        }
+
+        .social-proof-pill:hover .social-proof-now {
+            color: var(--orange);
         }
 
         .avatar-stack {
@@ -197,14 +206,22 @@
             width: 28px;
             height: 28px;
             border-radius: 50%;
-            border: 1.5px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.08);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.85rem;
-            line-height: 1;
+            object-fit: cover;
             margin-left: -8px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .social-proof-pill:hover .avatar-circle:nth-child(1) {
+            transform: translateX(-2px);
+        }
+
+        .social-proof-pill:hover .avatar-circle:nth-child(2) {
+            transform: scale(1.025);
+        }
+
+        .social-proof-pill:hover .avatar-circle:nth-child(3) {
+            transform: translateX(2px);
         }
 
         .avatar-circle:first-child {
@@ -1091,11 +1108,11 @@
         <div class="hero-content">
             <div class="social-proof-pill fade-up">
                 <div class="avatar-stack">
-                    <div class="avatar-circle">👩🏽</div>
-                    <div class="avatar-circle">👨🏻</div>
-                    <div class="avatar-circle">👩🏾</div>
+                    <img class="avatar-circle" src="assets/images/1igpfp.jpg" alt="">
+                    <img class="avatar-circle" src="assets/images/2igpfp.jpg" alt="">
+                    <img class="avatar-circle" src="assets/images/3igpfp.jpg" alt="">
                 </div>
-                <span class="social-proof-text">200+ have joined</span>
+                <span class="social-proof-text">Claim Your Spot <span class="social-proof-now">Now</span></span>
             </div>
 
             <h1 class="hero-headline fade-up">
