@@ -230,7 +230,7 @@
 
         .social-proof-text {
             font-size: clamp(0.8rem, 1.4vw, 0.95rem);
-            font-weight: 500;
+            font-weight: 700;
             color: rgba(255, 255, 255, 0.9);
         }
 
@@ -284,12 +284,17 @@
         .hero-actions {
             display: flex;
             align-items: stretch;
-            /* force equal height */
             justify-content: center;
             gap: 12px;
             flex-wrap: wrap;
             animation-delay: 0.6s;
-            margin-top: 28px;
+            margin-top: 35px;
+        }
+
+        @media (max-width: 525px) {
+            .hero-actions {
+                margin-top: 12px;
+            }
         }
 
         .cta-btn {
@@ -1106,7 +1111,7 @@
         </div>
 
         <div class="hero-content">
-            <div class="social-proof-pill fade-up">
+            <div class="social-proof-pill fade-up" onclick="openModal()" style="cursor:pointer;">
                 <div class="avatar-stack">
                     <img class="avatar-circle" src="assets/images/1igpfp.jpg" alt="">
                     <img class="avatar-circle" src="assets/images/2igpfp.jpg" alt="">
